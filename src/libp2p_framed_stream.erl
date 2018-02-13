@@ -4,7 +4,7 @@
 
 
 % gen_server
--export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2]).
+-export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 % API
 -export([client/3, server/3, server/4]).
 % libp2p_connection
@@ -198,6 +198,9 @@ handle_resp({stop, Reason, Reply, ModuleState}, State=#state{connection=Connecti
 handle_resp(Msg, State=#state{}) ->
     lager:error("Unhandled framed stream response ~p", [Msg]),
     {stop, {error, bad_resp}, State}.
+
+code_change(_OldVsn, State, _Extra) ->
+    {ok, State}.
 
 terminate(Reason, #state{kind=Kind, connection=Connection, module=Module, state=ModuleState}) ->
     case erlang:function_exported(Module, terminate, 2) of

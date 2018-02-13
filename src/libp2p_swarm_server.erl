@@ -7,7 +7,7 @@
           monitors=[] :: [{{reference(), pid()}, {atom(), term()}}]
          }).
 
--export([start_link/1, init/1, handle_call/3, handle_info/2, handle_cast/2, terminate/2]).
+-export([start_link/1, init/1, handle_call/3, handle_info/2, handle_cast/2, terminate/2, code_change/3]).
 
 -export([dial/5, listen/2, connect/4,
          listen_addrs/1, add_connection_handler/3,
@@ -111,6 +111,8 @@ handle_cast(Msg, State) ->
     lager:warning("Unhandled cast: ~p~n", [Msg]),
     {noreply, State}.
 
+code_change(_OldVsn, State, _Extra) ->
+    {ok, State}.
 
 terminate(_Reason, #state{tid=TID}) ->
     lists:foreach(fun({Addr, Pid}) ->

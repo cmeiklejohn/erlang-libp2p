@@ -44,7 +44,7 @@
 -type goaway() :: ?GOAWAY_NORMAL | ?GOAWAY_PROTOCOL | ?GOAWAY_INTERNAL.
 
 % gen_server
--export([init/1, handle_info/2, handle_call/3, handle_cast/2, terminate/2]).
+-export([init/1, handle_info/2, handle_call/3, handle_cast/2, terminate/2, code_change/3]).
 % API
 -export([start_server/4, start_client/3]).
 -export([send/2, send/3,
@@ -153,6 +153,8 @@ handle_call(_Msg, _From, State) ->
 handle_cast(_Msg, State) ->
     {noreply, State}.
 
+code_change(_OldVsn, State, _Extra) ->
+    {ok, State}.
 
 terminate(_Reason, #state{connection=Connection}) ->
     fdclr(Connection),
